@@ -7,11 +7,17 @@ package runnable;
 import java.util.ArrayList;
 
 import visualization.Vehicle;
+import visualization.Car;
+import visualization.Bus;
+import visualization.Board;
 
 public class Main {
 
+	private static Board board;
+
 	public static void main(String[] args) {
 		ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+		board = new Board("SprinterTurtle",1280,720);
 
 		// The main loop of the game
 		while(true){

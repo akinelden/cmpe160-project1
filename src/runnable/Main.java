@@ -24,6 +24,7 @@ public class Main {
 			moveVehicles(vehicles);
 			
 			createVehicle();
+			board.moveTurtle(0.0001, 1);
 			
 			//TODO check for collision and call other methods like updateScore etc.
 		}

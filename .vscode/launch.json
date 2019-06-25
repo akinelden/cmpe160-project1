@@ -12,10 +12,16 @@
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-Main<SprinterTurtle (2)>",
+            "name": "Debug (Launch)-Main<SprinterTurtle>",
             "request": "launch",
             "mainClass": "runnable.Main",
-            "projectName": "SprinterTurtle (2)"
+            "projectName": "SprinterTurtle"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Main",
+            "request": "launch",
+            "mainClass": "runnable.Main"
         }
     ]
 }

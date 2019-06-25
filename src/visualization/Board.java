@@ -3,6 +3,9 @@ package visualization;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -21,6 +24,12 @@ public class Board implements BoardIntf {
 	private GImage explode;
 	private GLabel round, score;
 	private GLabel highScore;
+	private KeyListener keyListen;
+	enum Keys {
+		K_UP,K_DOWN,K_RIGHT,K_LEFT,K_W,K_S,K_A,K_D,K_P,
+		MAX // be sure that MAX always the last one
+	}
+	private int[] pressedKeys = new int [Keys.MAX.ordinal()];
 
 	public Board(String boardName, int width, int height) {
 		asphalt = new GImage("asfalt.jpg");
@@ -37,6 +46,7 @@ public class Board implements BoardIntf {
 		frame.getContentPane().add(canvas);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		canvas.setVisible(false);
 		setBackground();
 	}
 
@@ -51,6 +61,7 @@ public class Board implements BoardIntf {
 		addGameInfoLabels();
 		addKeyBoardListener();
 		startNewRound();
+		canvas.setVisible(true);
 	}
 
 	public void startNewRound(){
@@ -61,6 +72,55 @@ public class Board implements BoardIntf {
 	}
 
 	public void addKeyBoardListener() {
+		keyListen = new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_UP)
+					pressedKeys[Keys.K_UP.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_DOWN)
+					pressedKeys[Keys.K_DOWN.ordinal()]=1;
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+					pressedKeys[Keys.K_RIGHT.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_LEFT)
+					pressedKeys[Keys.K_LEFT.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_W)
+					pressedKeys[Keys.K_W.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_S)
+					pressedKeys[Keys.K_S.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_A)
+					pressedKeys[Keys.K_A.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_D)
+					pressedKeys[Keys.K_D.ordinal()]=1;
+				if(e.getKeyCode() == KeyEvent.VK_P)
+					pressedKeys[Keys.K_P.ordinal()]=1;
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_UP)
+					pressedKeys[Keys.K_UP.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_DOWN)
+					pressedKeys[Keys.K_DOWN.ordinal()]=0;
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+					pressedKeys[Keys.K_RIGHT.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_LEFT)
+					pressedKeys[Keys.K_LEFT.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_W)
+					pressedKeys[Keys.K_W.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_S)
+					pressedKeys[Keys.K_S.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_A)
+					pressedKeys[Keys.K_A.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_D)
+					pressedKeys[Keys.K_D.ordinal()]=0;
+				if(e.getKeyCode() == KeyEvent.VK_P)
+					pressedKeys[Keys.K_P.ordinal()]=0;
+			}
+		};
+		canvas.addKeyListener(keyListen);
 	}
 
 	public void addGameInfoLabels() {
@@ -72,6 +132,12 @@ public class Board implements BoardIntf {
 		double y = asphalt.getY()+asphalt.getHeight()+30;
 		canvas.add(round, x, y);
 		canvas.add(score, x, y+25);
+	}
+
+	public void moveTurtle(double elapsedTime, double turtleSpeed){
+		double x_move = (pressedKeys[Keys.K_RIGHT.ordinal()]-pressedKeys[Keys.K_LEFT.ordinal()])*elapsedTime*turtleSpeed;
+		double y_move = (pressedKeys[Keys.K_DOWN.ordinal()]-pressedKeys[Keys.K_UP.ordinal()])*elapsedTime*turtleSpeed;
+		turtle.move(x_move, y_move);
 	}
 
 	public void addObject(GObject g) {

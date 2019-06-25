@@ -1,5 +1,8 @@
 package visualization;
 
+import java.awt.Color;
+import java.util.Arrays;
+
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 import acm.graphics.GOval;
@@ -15,13 +18,53 @@ public abstract class Vehicle extends GCompound {
 	protected int width, height, windowLength, wheelCircle;
 	protected int direction, lane;
 
-	public abstract void addBody(int objX, int objY);
+	public Vehicle(int d, int l, int h){
+		direction = d;
+		lane = l;
+		height = h;
+		width = 2*height;
+		windowLength = height/3;
+		wheelCircle = height/4;
+	}
+	// TODO: Review the parameters
+	public void addBody(Color color, int objY){
+		body = new GRect(width,height);
+		body.setFillColor(color);
+		body.setFilled(true);
+		this.add(body);
+	}
 	
-	public abstract void addWindows(int objX, int objY);
+	public void addWindows(int winNo, int objY){
+		windows = new GRect[winNo];
+		for(int i=0; i<windows.length; i++){
+			GRect win = new GRect(width/(2*winNo)-windowLength/2, height/5, windowLength, windowLength);
+			win.setFillColor(Color.WHITE);
+			win.setFilled(true);
+			win.move(i*width/winNo, 0);
+			windows[i]=win;
+			this.add(win);
+		}
+	}
 
-	public abstract void addWheels(int objX, int objY);
+	public void addWheels(int wheelNo, int objY){
+		wheels = new GOval[wheelNo];
+		for(int i=0; i<wheels.length; i++){
+			GOval wh = new GOval(width/(2*wheelNo)-wheelCircle/2, height-wheelCircle/2, wheelCircle, wheelCircle);
+			wh.setFillColor(Color.BLACK);
+			wh.setFilled(true);
+			wh.move(i*width/wheelNo, 0);
+			wheels[i]=wh;
+			this.add(wh);
+		}
+	}
 
-	public abstract void addLabel(int objX, int objY);
+	public void addLabel(String l, String font){
+		label = new GLabel(l);
+		double x = width/10;
+		double y = windows[0].getY()+windowLength+height/5;
+		label.setFont(font);
+		this.add(label,x,y);
+	}
 	
 	public int getDirection(){
 		return direction;

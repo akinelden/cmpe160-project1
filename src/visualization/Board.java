@@ -31,14 +31,14 @@ public class Board implements BoardIntf {
 	}
 	private int[] pressedKeys = new int [Keys.MAX.ordinal()];
 
-	public Board(String boardName, int width, int height) {
+	public Board(String boardName, int width, int height, int margin) {
 		asphalt = new GImage("asfalt.jpg");
 		turtle = new GImage("turtle.png");
 		explode = new GImage("explode.png");
-		setCanvas(boardName, width, height);
+		setCanvas(boardName, width, height, margin);
 	}
 
-	public void setCanvas(String boardName, int width, int height) {
+	public void setCanvas(String boardName, int width, int height, int margin) {
 		frame = new JFrame(boardName);
 		frame.setSize(width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,14 +47,13 @@ public class Board implements BoardIntf {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		canvas.setVisible(false);
-		setBackground();
+		setBackground(margin);
 	}
 
-	public void setBackground() {
+	public void setBackground(int margin) {
 		canvas.setBackground(Color.LIGHT_GRAY);
-		double r = 150;
-		asphalt.setSize(canvas.getWidth(),canvas.getHeight()-r);
-		asphalt.setLocation(0,r/2);
+		asphalt.setSize(canvas.getWidth(),canvas.getHeight()-2*margin);
+		asphalt.setLocation(0,margin);
 		canvas.add(asphalt);
 		turtle.scale(0.5);
 		canvas.add(turtle);
@@ -141,6 +140,8 @@ public class Board implements BoardIntf {
 	}
 
 	public void addObject(GObject g) {
+		canvas.add(g);
+		objects.add(g);
 	}
 
 	public void waitFor(long millisecs) {

@@ -141,10 +141,8 @@ public class Board implements BoardIntf {
 		double x_move = (pressedKeys[Keys.K_RIGHT.ordinal()]-pressedKeys[Keys.K_LEFT.ordinal()])*elapsedTime*turtleSpeed;
 		double y_move = (pressedKeys[Keys.K_DOWN.ordinal()]-pressedKeys[Keys.K_UP.ordinal()])*elapsedTime*turtleSpeed;
 		turtle.move(x_move, y_move);
-		double x = turtle.getX();
-		double y = turtle.getY();
-		turtle.setLocation(Math.max(0, x),Math.max(0, y));
-		turtle.setLocation(Math.min(canvas.getHeight(), x),Math.min(canvas.getHeight(), y));
+		turtle.setLocation(Math.max(0, turtle.getX()),Math.max(0, turtle.getY()));
+		turtle.setLocation(Math.min(canvas.getWidth()-turtle.getWidth(), turtle.getX()),Math.min(canvas.getHeight()-turtle.getHeight(), turtle.getY()));
 	}
 
 	public boolean checkCollision(){

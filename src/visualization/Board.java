@@ -165,7 +165,11 @@ public class Board implements BoardIntf {
 		int l = g.getLane() % asphaltParts;
 		double x = d > 0 ? -g.getWidth() : asphalt.getWidth();
 		double y = (l+1)*(asphalt.getHeight()-g.getHeight())/(asphaltParts+1) + asphalt.getY();
-		canvas.add(g,x,y);
+		g.setLocation(x, y);
+		for(Vehicle v : objects){
+			if(v.getBounds().intersects(g.getBounds())){	return;		}
+		}
+		canvas.add(g);
 		objects.add(g);
 	}
 

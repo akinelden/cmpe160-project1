@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.lang.System;
 import java.util.Random;
 
+import acm.graphics.GRect;
+import acm.graphics.GRectangle;
 import visualization.Vehicle;
 import visualization.Car;
 import visualization.Bus;
@@ -26,7 +28,7 @@ public class Main {
 		long current = System.currentTimeMillis();
 		long prev;
 		double elapsedTime;
-		
+
 		// The main loop of the game
 		while(true){
 			prev = current;
@@ -34,14 +36,14 @@ public class Main {
 			elapsedTime = (current-prev);
 			board.moveTurtle(elapsedTime, 0.1);
 			board.moveVehicles(elapsedTime, 0.2);
-			if(board.checkCollision()){	break;	}
+			if(board.checkCollision()){	gameOver();	}
 			createVehicle(elapsedTime);
 			
 			//TODO check for collision and call other methods like updateScore etc.
 		}
 	}
 
-	
+	private static void gameOver(){}
 
 	/**
 	 * Create new vehicle checking the already created vehicles.
@@ -53,7 +55,7 @@ public class Main {
 	 * @return 		vehicle to be added to the board
 	 */
 	private static boolean createVehicle(double elapsedTime) {
-		if(randGen.nextDouble()<0.00025*elapsedTime){
+		if(randGen.nextDouble()<0.0003*elapsedTime){
 			int d = randGen.nextInt(2)==0 ? -1 : 1;
 			int l = randGen.nextInt(10);
 			Vehicle v;

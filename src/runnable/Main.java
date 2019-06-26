@@ -4,9 +4,9 @@ package runnable;
  * This class is left incomplete on purpose.
  */
 
-import java.util.ArrayList;
 import java.lang.System;
 import java.util.Random;
+import java.lang.Math;
 
 import acm.graphics.GRect;
 import acm.graphics.GRectangle;
@@ -19,6 +19,8 @@ public class Main {
 
 	private static Board board;
 	private static Random randGen = new Random(System.currentTimeMillis());
+	private static int round = 1;
+	private static int score = 0;
 
 	public static void main(String[] args) {
 		int screenWidth = 1280;
@@ -35,15 +37,26 @@ public class Main {
 			current = System.currentTimeMillis();
 			elapsedTime = (current-prev);
 			board.moveTurtle(elapsedTime, 0.1);
-			board.moveVehicles(elapsedTime, 0.2);
-			if(board.checkCollision()){	gameOver();	}
+			board.moveVehicles(elapsedTime, 0.15*Math.sqrt(round));
+			if(board.checkCollision()){	
+				gameOver();	
+			}
+			if(board.checkPassed()){
+				score+=100*Math.pow(2, Math.sqrt(round-1));
+				round++;
+				board.updateLabels(round, score);
+			}
 			createVehicle(elapsedTime);
+			
 			
 			//TODO check for collision and call other methods like updateScore etc.
 		}
 	}
 
-	private static void gameOver(){}
+	private static void gameOver(){
+		board.gameOver();
+		System.exit(0);
+	}
 
 	/**
 	 * Create new vehicle checking the already created vehicles.
@@ -55,7 +68,7 @@ public class Main {
 	 * @return 		vehicle to be added to the board
 	 */
 	private static boolean createVehicle(double elapsedTime) {
-		if(randGen.nextDouble()<0.0003*elapsedTime){
+		if(randGen.nextDouble()<0.001*elapsedTime){
 			int d = randGen.nextInt(2)==0 ? -1 : 1;
 			int l = randGen.nextInt(10);
 			Vehicle v;

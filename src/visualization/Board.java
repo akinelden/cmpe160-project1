@@ -3,12 +3,10 @@ package visualization;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Vector;
 import java.lang.System;
-import java.lang.ref.WeakReference;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import acm.graphics.GCanvas;
@@ -21,12 +19,11 @@ import acm.graphics.GPoint;
 public class Board implements BoardIntf {
 	private JFrame frame;
 	private GCanvas canvas;
-	private GImage asphalt;
-	private GImage turtle;
-	private GImage explode;
-	private GLabel round, score;
-	private GLabel highScore;
+	private GImage asphalt,turtle,explode;
+	private GLabel round, score, highScore;
+	private GLabel congrLabel, endLabel, pauseLabel;
 	private KeyListener keyListen;
+	private JButton startButton, stopButton;
 	enum Keys {
 		K_UP,K_DOWN,K_RIGHT,K_LEFT,K_W,K_S,K_A,K_D,K_P,
 		MAX // be sure that MAX always the last one
@@ -37,6 +34,10 @@ public class Board implements BoardIntf {
 		asphalt = new GImage("asfalt.jpg");
 		turtle = new GImage("turtle.png");
 		explode = new GImage("explode.png");
+		congrLabel = new GLabel("CONGRATULATIONS! : 3");
+		endLabel = new GLabel("GAME OVER");
+		startButton = new JButton("New Game");
+		stopButton = new JButton("Exit");
 		setCanvas(boardName, width, height, margin);
 	}
 
@@ -59,17 +60,53 @@ public class Board implements BoardIntf {
 		canvas.add(asphalt);
 		turtle.scale(0.5);
 		canvas.add(turtle);
+		congrLabel.setColor(Color.YELLOW);
+		congrLabel.setFont("*-bold-*");
+		congrLabel.setFont("*-40-*");
+		canvas.add(congrLabel, (canvas.getWidth()-congrLabel.getWidth())/2, canvas.getHeight()/2);
+		congrLabel.setVisible(false);
+		endLabel.setFont("*-bold-*");
+		endLabel.setFont("*-50-*");
+		canvas.add(endLabel, (canvas.getWidth()-endLabel.getWidth())/2, canvas.getHeight()/2);
+		endLabel.setVisible(false);
+		canvas.add(startButton, 20,20);
+		stopButton.setSize(startButton.getWidth(), startButton.getHeight());
+		canvas.add(stopButton, 40+startButton.getWidth(), 20);
+		setButtons();
 		addGameInfoLabels();
 		addKeyBoardListener();
-		startNewRound();
+		resetTurtle();
 		canvas.setVisible(true);
 	}
+	// TODO: Define button functions
+	private void setButtons(){
+	}
 
-	public void startNewRound(){
-		objects.clear();
+	private void resetTurtle(){
 		double x = canvas.getWidth()/2-turtle.getWidth()/2;
 		double y = asphalt.getY()+asphalt.getHeight();
 		turtle.setLocation(x,y);
+	}
+
+	private void startNewRound(){
+		/*
+		for(Vehicle v : objects){
+			canvas.remove(v);
+		}
+		objects.clear();
+		*/
+		resetTurtle();
+		for(int i=3; i>=0; i--){
+			congrLabel.setLabel("CONGRATULATIONS! : "+Integer.toString(i));
+			congrLabel.setVisible(true);
+			waitFor(750);
+		}
+		congrLabel.setVisible(false);
+	}
+
+	public void updateLabels(int r, int s){
+		round.setLabel("ROUND: "+Integer.toString(r));
+		score.setLabel("SCORE: "+Integer.toString(s));
 	}
 
 	public void addKeyBoardListener() {
@@ -125,8 +162,8 @@ public class Board implements BoardIntf {
 	}
 
 	public void addGameInfoLabels() {
-		round = new GLabel("ROUND:");
-		score = new GLabel("SCORE:");
+		round = new GLabel("ROUND: 1");
+		score = new GLabel("SCORE: 0");
 		round.setFont("*-18-*");
 		score.setFont("*-18-*");
 		round.setFont("*-bold-*");
@@ -155,7 +192,10 @@ public class Board implements BoardIntf {
 	}
 
 	public boolean checkPassed(){
-		if(turtle.getY()-turtle.getHeight()>=asphalt.getY()){	return true;	}
+		if(turtle.getY()+turtle.getHeight()<=asphalt.getY()){
+			startNewRound();
+			return true;	
+		}
 		return false;
 	}
 
@@ -190,12 +230,15 @@ public class Board implements BoardIntf {
 		deleteObjects(outVehicles);
 	}
 
-	// TODO:	check this function
 	public void deleteObjects(Vector<Vehicle> outVehicles){
 		for(Vehicle v : outVehicles){
 			canvas.remove(v);
 			objects.remove(v);
 		}
+	}
+
+	public void gameOver(){
+		endLabel.setVisible(true);
 	}
 
 	public void waitFor(long millisecs) {

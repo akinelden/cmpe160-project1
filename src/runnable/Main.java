@@ -16,37 +16,26 @@ import visualization.Board;
 public class Main {
 
 	private static Board board;
-	
+	private static Random randGen = new Random(System.currentTimeMillis());
 
 	public static void main(String[] args) {
 		int screenWidth = 1280;
 		int screenHeight = 720;
 		int margin = 75;
 		board = new Board("SprinterTurtle",screenWidth,screenHeight, margin);
-		long now = System.currentTimeMillis();
+		long current = System.currentTimeMillis();
 		long prev;
 		double elapsedTime;
-
-		// TODO: Delete these lines
-		{
-			Car c1 = new Car(-1,10);
-			board.addObject(c1);
-			//c1.move(-200,0);
-	
-			Bus b1 = new Bus(1,13);
-			//b1.move(500, 100);
-			board.addObject(b1);
-		}
 		
 		// The main loop of the game
 		while(true){
-			prev = now;
-			now = System.currentTimeMillis();
-			elapsedTime = (now-prev);
-			board.moveVehicles(elapsedTime, 0.1);
-
-			createVehicle();
+			prev = current;
+			current = System.currentTimeMillis();
+			elapsedTime = (current-prev);
 			board.moveTurtle(elapsedTime, 0.1);
+			board.moveVehicles(elapsedTime, 0.2);
+			if(board.checkCollision()){	break;	}
+			createVehicle(elapsedTime);
 			
 			//TODO check for collision and call other methods like updateScore etc.
 		}
@@ -63,9 +52,21 @@ public class Main {
 	 * 
 	 * @return 		vehicle to be added to the board
 	 */
-	private static Vehicle createVehicle() {
-		//TODO implement
-		return null;
+	private static boolean createVehicle(double elapsedTime) {
+		if(randGen.nextDouble()<0.00025*elapsedTime){
+			int d = randGen.nextInt(2)==0 ? -1 : 1;
+			int l = randGen.nextInt(10);
+			Vehicle v;
+			if(randGen.nextDouble()>0.5){
+				v = new Bus(d, l);
+			}
+			else{
+				v= new Car(d, l);
+			}
+			board.addObject(v);
+			return true;
+		}
+		return false;
 	}
 
 }

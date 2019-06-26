@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 import java.lang.System;
+import java.lang.ref.WeakReference;
 
 import javax.swing.JFrame;
 
@@ -140,6 +141,24 @@ public class Board implements BoardIntf {
 		double x_move = (pressedKeys[Keys.K_RIGHT.ordinal()]-pressedKeys[Keys.K_LEFT.ordinal()])*elapsedTime*turtleSpeed;
 		double y_move = (pressedKeys[Keys.K_DOWN.ordinal()]-pressedKeys[Keys.K_UP.ordinal()])*elapsedTime*turtleSpeed;
 		turtle.move(x_move, y_move);
+		double x = turtle.getX();
+		double y = turtle.getY();
+		turtle.setLocation(Math.max(0, x),Math.max(0, y));
+		turtle.setLocation(Math.min(canvas.getHeight(), x),Math.min(canvas.getHeight(), y));
+	}
+
+	public boolean checkCollision(){
+		for(Vehicle v : objects){
+			if(turtle.getBounds().intersects(v.getBounds())){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean checkPassed(){
+		if(turtle.getY()-turtle.getHeight()>=asphalt.getY()){	return true;	}
+		return false;
 	}
 
 	public void addObject(Vehicle g) {
@@ -167,7 +186,6 @@ public class Board implements BoardIntf {
 			}
 		}
 		deleteObjects(outVehicles);
-		System.gc();
 	}
 
 	// TODO:	check this function
@@ -176,7 +194,6 @@ public class Board implements BoardIntf {
 			canvas.remove(v);
 			objects.remove(v);
 		}
-		outVehicles.clear();
 	}
 
 	public void waitFor(long millisecs) {

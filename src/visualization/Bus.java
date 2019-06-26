@@ -10,6 +10,6 @@ public class Bus extends Vehicle{
 		super.addBody(Color.RED,1);
 		super.addWindows(3,1);
 		super.addWheels(4,1);
-		super.addLabel("BUS","*-18-*");
+		super.addLabel("BUS","*-16-*");
 	}	
 }

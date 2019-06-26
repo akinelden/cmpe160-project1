@@ -2,15 +2,13 @@ package visualization;
 
 import java.util.ArrayList;
 
-import acm.graphics.GObject;
-
 public interface BoardIntf {
-	ArrayList<GObject> objects = new ArrayList<GObject>();
+	ArrayList<Vehicle> objects = new ArrayList<Vehicle>();
 	
 	public void setCanvas(String boardName, int width, int height, int margin);
 	public void setBackground(int margin);
 	public void addKeyBoardListener();
 	public void addGameInfoLabels();
-	public void addObject(GObject g);
+	public void addObject(Vehicle g);
 	public void waitFor(long millisecs);
 }

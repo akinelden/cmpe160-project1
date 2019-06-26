@@ -19,7 +19,6 @@ public class Main {
 	
 
 	public static void main(String[] args) {
-		ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
 		int screenWidth = 1280;
 		int screenHeight = 720;
 		int margin = 75;
@@ -29,20 +28,22 @@ public class Main {
 		double elapsedTime;
 
 		// TODO: Delete these lines
-		Car c1 = new Car(1,10);
-		c1.move(100, 100);
-		board.addObject(c1);
-
-		Bus b1 = new Bus(1,10);
-		b1.move(500, 100);
-		board.addObject(b1);
-
+		{
+			Car c1 = new Car(-1,10);
+			board.addObject(c1);
+			//c1.move(-200,0);
+	
+			Bus b1 = new Bus(1,13);
+			//b1.move(500, 100);
+			board.addObject(b1);
+		}
+		
 		// The main loop of the game
 		while(true){
 			prev = now;
 			now = System.currentTimeMillis();
 			elapsedTime = (now-prev);
-			moveVehicles(vehicles);
+			board.moveVehicles(elapsedTime, 0.1);
 
 			createVehicle();
 			board.moveTurtle(elapsedTime, 0.1);
@@ -51,14 +52,7 @@ public class Main {
 		}
 	}
 
-	/**
-	 * Move each vehicle on the arraylist one step in their corresponding direction
-	 * 
-	 * @param veh	visible vehicles	
-	 */
-	private static void moveVehicles(ArrayList<Vehicle> veh) {
-
-	}
+	
 
 	/**
 	 * Create new vehicle checking the already created vehicles.

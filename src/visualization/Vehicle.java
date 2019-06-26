@@ -1,7 +1,6 @@
 package visualization;
 
 import java.awt.Color;
-import java.util.Arrays;
 
 import acm.graphics.GCompound;
 import acm.graphics.GLabel;
@@ -19,7 +18,7 @@ public abstract class Vehicle extends GCompound {
 	protected int direction, lane;
 
 	public Vehicle(int d, int l, int h){
-		direction = d;
+		direction = d; // -1 : left,	1 : right
 		lane = l;
 		height = h;
 		width = 2*height;
@@ -36,11 +35,11 @@ public abstract class Vehicle extends GCompound {
 	
 	public void addWindows(int winNo, int objY){
 		windows = new GRect[winNo];
+		double space = (width-winNo*windowLength)/(winNo+3);
 		for(int i=0; i<windows.length; i++){
-			GRect win = new GRect(width/(2*winNo)-windowLength/2, height/5, windowLength, windowLength);
+			GRect win = new GRect(2*space+i*(windowLength+space), height/5, windowLength, windowLength);
 			win.setFillColor(Color.WHITE);
 			win.setFilled(true);
-			win.move(i*width/winNo, 0);
 			windows[i]=win;
 			this.add(win);
 		}
@@ -60,18 +59,25 @@ public abstract class Vehicle extends GCompound {
 
 	public void addLabel(String l, String font){
 		label = new GLabel(l);
-		double x = width/10;
+		double x = direction < 0 ? width/10 : 9*width/10-label.getWidth();
 		double y = windows[0].getY()+windowLength+height/5;
 		label.setFont(font);
+		label.setFont("*-bold-*");
+		label.setColor(Color.WHITE);
 		this.add(label,x,y);
 	}
-	
+
 	public int getDirection(){
 		return direction;
 	}
 	
 	public int getLane() {
 		return lane;
+	}
+	// TODO: Check finalize
+	@Override
+	public void finalize(){
+		System.out.println(label.getLabel()+" DESTROYED");
 	}
 	
 }

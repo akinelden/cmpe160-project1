@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
+import java.lang.System;
 
 import javax.swing.JFrame;
 
@@ -127,6 +128,8 @@ public class Board implements BoardIntf {
 		score = new GLabel("SCORE:");
 		round.setFont("*-18-*");
 		score.setFont("*-18-*");
+		round.setFont("*-bold-*");
+		score.setFont("*-bold-*");
 		double x = 20;
 		double y = asphalt.getY()+asphalt.getHeight()+30;
 		canvas.add(round, x, y);
@@ -139,11 +142,48 @@ public class Board implements BoardIntf {
 		turtle.move(x_move, y_move);
 	}
 
-	public void addObject(GObject g) {
-		canvas.add(g);
+	public void addObject(Vehicle g) {
+		int asphaltParts = 10;
+		int d = g.getDirection();
+		int l = g.getLane() % asphaltParts;
+		double x = d > 0 ? -g.getWidth() : asphalt.getWidth();
+		double y = (l+1)*(asphalt.getHeight()-g.getHeight())/(asphaltParts+1) + asphalt.getY();
+		canvas.add(g,x,y);
 		objects.add(g);
 	}
 
+	/**
+	 * Move each vehicle on the arraylist one step in their corresponding direction
+	 * 
+	 * @param veh	visible vehicles	
+	 */
+	public void moveVehicles(double elapsedTime, double vehicleSpeed){
+		Vector<Vehicle> outVehicles = new Vector<Vehicle>();
+		for(Vehicle g : objects){
+			double x_move = elapsedTime*vehicleSpeed*g.getDirection();
+			g.move(x_move, 0);
+			if(!g.getBounds().intersects(asphalt.getBounds())){
+				outVehicles.add(g);
+			}
+		}
+		deleteObjects(outVehicles);
+		System.gc();
+	}
+
+	// TODO:	check this function
+	public void deleteObjects(Vector<Vehicle> outVehicles){
+		for(Vehicle v : outVehicles){
+			canvas.remove(v);
+			objects.remove(v);
+		}
+		outVehicles.clear();
+	}
+
 	public void waitFor(long millisecs) {
+		long start = System.currentTimeMillis();
+		long end = start;
+		while(end-start<millisecs){
+			end = System.currentTimeMillis();
+		}
 	}
 }

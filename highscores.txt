@@ -1,4 +1,6 @@
 dfh,1816
+akin,1363
+akin,1348
 GARO,941
 nero,916
 kingu,616
@@ -7,5 +9,3 @@ kingu,361
 gonsu,337
 saitama,330
 nermin,185
-akinn,169
-saitama,165

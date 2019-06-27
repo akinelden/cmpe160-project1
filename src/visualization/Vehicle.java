@@ -77,7 +77,6 @@ public abstract class Vehicle extends GCompound {
 	// TODO: Check finalize
 	@Override
 	public void finalize(){
-		System.out.println(label.getLabel()+" DESTROYED");
 	}
 	
 }

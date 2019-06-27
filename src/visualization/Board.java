@@ -304,6 +304,9 @@ public class Board implements BoardIntf {
 	 * @param veh	visible vehicles	
 	 */
 	public void moveVehicles(double elapsedTime, double vehicleSpeed){
+		if(elapsedTime > 1000){
+			elapsedTime = 100;
+		}
 		Vector<Vehicle> outVehicles = new Vector<Vehicle>();
 		for(Vehicle g : objects){
 			double x_move = elapsedTime*vehicleSpeed*g.getDirection();

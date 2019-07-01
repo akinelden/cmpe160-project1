@@ -1,9 +1,5 @@
 package runnable;
 
-/*
- * This class is left incomplete on purpose.
- */
-
 import java.lang.System;
 import java.util.Random;
 import java.util.Vector;
@@ -12,8 +8,6 @@ import java.util.Comparator;
 import java.io.*;
 import java.lang.Math;
 
-import acm.graphics.GRect;
-import acm.graphics.GRectangle;
 import visualization.Vehicle;
 import visualization.Car;
 import visualization.Bus;
@@ -65,7 +59,6 @@ public class Main {
 		player = board.startNewGame();
 	}
 
-	// TODO: write score to file
 	private static void gameOver(){
 		int last_score = board.updateLabels(round, score);
 		Pair p = new Pair(player, last_score);
@@ -101,7 +94,6 @@ public class Main {
 
 	private static void readScores(){
 		BufferedReader reader = null;
-		//TODO: check this
 		if(highscores!=null){
 			highscores.clear();
 		}

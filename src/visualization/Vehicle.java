@@ -25,15 +25,14 @@ public abstract class Vehicle extends GCompound {
 		windowLength = height/3;
 		wheelCircle = height/4;
 	}
-	// TODO: Review the parameters
-	public void addBody(Color color, int objY){
+	public void addBody(Color color){
 		body = new GRect(width,height);
 		body.setFillColor(color);
 		body.setFilled(true);
 		this.add(body);
 	}
 	
-	public void addWindows(int winNo, int objY){
+	public void addWindows(int winNo){
 		windows = new GRect[winNo];
 		double space = (width-winNo*windowLength)/(winNo+3);
 		for(int i=0; i<windows.length; i++){
@@ -45,7 +44,7 @@ public abstract class Vehicle extends GCompound {
 		}
 	}
 
-	public void addWheels(int wheelNo, int objY){
+	public void addWheels(int wheelNo){
 		wheels = new GOval[wheelNo];
 		for(int i=0; i<wheels.length; i++){
 			GOval wh = new GOval(width/(2*wheelNo)-wheelCircle/2, height-wheelCircle/2, wheelCircle, wheelCircle);
@@ -74,7 +73,7 @@ public abstract class Vehicle extends GCompound {
 	public int getLane() {
 		return lane;
 	}
-	// TODO: Check finalize
+
 	@Override
 	public void finalize(){
 	}

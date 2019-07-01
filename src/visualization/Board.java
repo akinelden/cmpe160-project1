@@ -17,9 +17,6 @@ import javax.swing.JTextField;
 import acm.graphics.GCanvas;
 import acm.graphics.GImage;
 import acm.graphics.GLabel;
-import acm.graphics.GObject;
-import acm.graphics.GOval;
-import acm.graphics.GPoint;
 
 public class Board implements BoardIntf {
 	private JFrame frame;
@@ -88,7 +85,6 @@ public class Board implements BoardIntf {
 		canvas.add(endLabel, (canvas.getWidth()-endLabel.getWidth())/2, canvas.getHeight()/2-endLabel.getHeight());
 		endLabel.setVisible(false);
 	}
-	// TODO: Define button functions
 	private void setButtons(){
 		canvas.add(startButton, canvas.getWidth()/2-10,endLabel.getY()+30);
 		startButton.setLocation(canvas.getWidth()/2-startButton.getWidth()-10, startButton.getY());
@@ -131,7 +127,7 @@ public class Board implements BoardIntf {
 		nameField.setFont(new Font("Arial", Font.BOLD, 35));
 		nameField.setSize((int)enterName.getWidth(), nameField.getWidth());
 		nameField.setLocation((int)enterName.getX(),(int)enterName.getY()+20);
-		JButton submit = new JButton("Submit");
+		JButton submit = new JButton("OK");
 		submit.setFont(new Font("Arial", Font.BOLD, 20));
 		submit.setLocation(nameField.getX()+nameField.getWidth()+20,nameField.getY()+5);
 		submit.addActionListener(new ActionListener(){
@@ -325,7 +321,6 @@ public class Board implements BoardIntf {
 		}
 	}
 
-	// TODO: Write game over function
 	public boolean gameOver(){
 		endLabel.sendToFront();
 		endLabel.setVisible(true);

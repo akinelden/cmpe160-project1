@@ -8,4 +8,4 @@ king,386
 kingu,361
 gonsu,337
 saitama,330
-nermin,185
+akin,40

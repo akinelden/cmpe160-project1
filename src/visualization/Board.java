@@ -265,7 +265,7 @@ public class Board implements BoardIntf {
 
 	public boolean checkCollision(){
 		for(Vehicle v : objects){
-			if(turtle.getBounds().intersects(v.getBounds())){
+			if(v.checkCollisionByParts(turtle.getBounds())){
 				return true;
 			}
 		}

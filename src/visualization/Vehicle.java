@@ -6,6 +6,7 @@ import acm.graphics.GCompound;
 import acm.graphics.GLabel;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
+import acm.graphics.GRectangle;
 
 public abstract class Vehicle extends GCompound {
 
@@ -72,6 +73,22 @@ public abstract class Vehicle extends GCompound {
 	
 	public int getLane() {
 		return lane;
+	}
+
+	public boolean checkCollisionByParts(GRectangle rect){
+		GRectangle gR = body.getBounds();
+		gR.setLocation(this.getLocation());
+		if(gR.intersects(rect)){
+			return true;
+		}
+		for(GOval w : wheels){
+			gR = w.getBounds();
+			gR.setLocation(gR.getX()+this.getX(),gR.getY()+this.getY());
+			if(gR.intersects(rect)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

@@ -337,12 +337,11 @@ public class Board implements BoardIntf {
 		return true;
 	}
 
-	public void updateHighScores(Vector<Vector<String>> hS){
-		if(hS.size() == 2){
-			for(int i=0; i<hS.get(0).size(); i++){
-				highScore1.get(i+1).setLabel(hS.get(0).get(i));
-				highScore2.get(i+1).setLabel(hS.get(1).get(i));
-			}
+	public void updateHighScores(ArrayList<String[]> hS){
+		int i=0;
+		for(String[] s : hS){
+			highScore1.get(i+1).setLabel(s[0]);
+			highScore2.get(i+1).setLabel(s[1]);
 		}
 	}
 

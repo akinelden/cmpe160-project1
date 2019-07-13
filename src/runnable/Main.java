@@ -15,7 +15,7 @@ public class Main {
 
 	private static Board board;
 	private static Random randGen = new Random(System.currentTimeMillis());
-	private static DBManager dbManager = new DBManager("Highscores.db");
+	private static SQLiteManager dbManager = new SQLiteManager("Highscores.db");
 	private static int round = 1;
 	private static int score = 0;
 	private static String player = "";

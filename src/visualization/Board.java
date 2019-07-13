@@ -342,6 +342,7 @@ public class Board implements BoardIntf {
 		for(String[] s : hS){
 			highScore1.get(i+1).setLabel(s[0]);
 			highScore2.get(i+1).setLabel(s[1]);
+			i++;
 		}
 	}
 

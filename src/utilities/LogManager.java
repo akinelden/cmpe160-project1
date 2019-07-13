@@ -16,22 +16,12 @@ public class LogManager{
     private String logfile;
 
     public LogManager(){
-        logfile = "unnamed.log";
-        initializeLogfile();
+        this("unnamed.log");
     }
 
     public LogManager(String fileName){
         logfile = fileName;
-        initializeLogfile();
-    }
-
-    private boolean isLogfileExists(){
-        File f = new File(logfile);
-        return f.exists();
-    }
-
-    private void initializeLogfile(){
-        String line = isLogfileExists() ? "------------------------------------------------" : "TYPE\tMESSAGE";
+        String line = (new File(logfile)).exists() ? "------------------------------------------------" : "TYPE\tMESSAGE";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logfile, true));){
             writer.write(line+"\n");
             writeLogMessage("APPLICATION STARTED", INFO_LOG);

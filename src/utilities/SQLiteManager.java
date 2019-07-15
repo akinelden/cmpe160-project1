@@ -4,54 +4,74 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class SQLiteManager{
-    static final String JDBC_DRIVER = "org.sqlite.JDBC";  
-    static final String DB_URL_PREFIX = "jdbc:sqlite:";
+    private static final String JDBC_DRIVER = "org.sqlite.JDBC";  
+    private static final String DB_URL_PREFIX = "jdbc:sqlite:";
     private String dbURL;
     private String dbName;
     private String tableName = "Highscores";
-    private Connection con;
+    private static final String noConnectionWarn = "Couldn't connect to highscores data. New scores won't be saved.";
+    private static final String resetTableWarn = "An error occurred while reading the highscores!\n"+
+                                                    "Do you want to delete existing records (if any) and reset the data.\n"+
+                                                    "Otherwise new scores won't be saved!";
     private boolean isConnected = true;
+    private Connection con;
 
-    public SQLiteManager(String db){
+    private LogManager logger;
+
+    private SQLiteManager(){}
+
+    public SQLiteManager(String db, LogManager lm){
         dbName = db;
         dbURL = DB_URL_PREFIX+dbName;
+        logger = lm;
         try{
             Class.forName(JDBC_DRIVER);
             con = DriverManager.getConnection(dbURL);
+        }catch(SQLException e1){
+            logger.writeExceptionLog(e1);
+            DialogManager.informException(noConnectionWarn, null);
+            isConnected = false;
+        }catch(Exception e2){
+            logger.writeExceptionLog(e2);
+            DialogManager.informException("Some files are missing.\nNew scores won't be saved.", null);
+            isConnected = false;
+        }
+    }
+
+    private boolean checkTableExistence(){
+        try{
             DatabaseMetaData dbMeta = con.getMetaData();
             ResultSet tables = dbMeta.getTables(null, null, tableName, new String[]{"TABLE"});
-            boolean tableExists = true;
             if(tables.next()){
                 tables.close();
-                ResultSet column1 = dbMeta.getColumns(null, null, tableName, "ID");
-                ResultSet column2 = dbMeta.getColumns(null, null, tableName, "Player"); 
-                ResultSet column3 = dbMeta.getColumns(null, null, tableName, "Score");
-                if(!column1.next() || !column2.next() || !column3.next()){
-                    column1.close();
-                    column2.close();
-                    column3.close();
-                    Statement stmt = con.createStatement();
-                    stmt.executeUpdate("DROP TABLE "+tableName);
-                    tableExists = false;
-                }
+                return true;
             }
             else{
-                tableExists = false;
+                return false;
             }
-            if(!tableExists){
-                Statement stmt = con.createStatement();
-                stmt.executeUpdate("CREATE TABLE "+tableName+
+        }catch(SQLException e){
+            logger.writeExceptionLog(e);
+            return false;
+        }
+    }
+
+    private void resetTable(boolean tableExists){
+        if(tableExists){
+            try(Statement stmt = con.createStatement();){
+                stmt.executeUpdate("DROP TABLE "+tableName);
+            }catch(SQLException e){
+                logger.writeExceptionLog(e);
+            }
+        }
+        try(Statement stmt = con.createStatement()){
+            stmt.executeUpdate("CREATE TABLE "+tableName+
                         " (ID INTEGER PRIMARY KEY AUTOINCREMENT, "+
                         "Player TEXT NOT NULL, "+
                         "Score INTEGER NOT NULL)");
-                stmt.executeUpdate("CREATE INDEX score_index ON "+tableName+" (Score)");
-                stmt.close();
-            }
-        }catch(SQLException e1){
-            e1.printStackTrace();
-            isConnected = false;
-        }catch(Exception e2){
-            e2.printStackTrace();
+            stmt.executeUpdate("CREATE INDEX score_index ON "+tableName+" (Score)");
+        }catch(SQLException e){
+            logger.writeExceptionLog(e);
+            DialogManager.informException(noConnectionWarn, null);
             isConnected = false;
         }
     }
@@ -70,9 +90,21 @@ public class SQLiteManager{
                 results[1] = Integer.toString(rs.getInt("Score"));
                 scores.add(results);
             }
-
         }catch(SQLException e){
-            e.printStackTrace();
+            boolean tableExists = checkTableExistence();
+            if(tableExists){
+                logger.writeExceptionLog(e);
+                if(DialogManager.askForAction(resetTableWarn, null)){
+                    resetTable(tableExists);
+                }
+                else{
+                    DialogManager.informException(noConnectionWarn, null);
+                    isConnected = false;
+                }
+            }
+            else{
+                resetTable(tableExists);
+            }
         }
         return scores;
     }
@@ -85,7 +117,23 @@ public class SQLiteManager{
         try(Statement stmt = con.createStatement()){
             stmt.executeUpdate(insertSql);
         }catch(SQLException e){
-            e.printStackTrace();
+            boolean tableExists = checkTableExistence();
+            if(tableExists){
+                logger.writeExceptionLog(e);
+                if(DialogManager.askForAction(resetTableWarn, null)){
+                    resetTable(tableExists);
+                    if(writeNewScore(playerName, score)){
+                        return true;
+                    }
+                }
+                else{
+                    DialogManager.informException(noConnectionWarn, null);
+                    isConnected = false;
+                }
+            }
+            else{
+                resetTable(tableExists);
+            }
             return false;
         }
         return true;

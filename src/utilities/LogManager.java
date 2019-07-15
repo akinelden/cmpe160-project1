@@ -15,21 +15,29 @@ public class LogManager{
     
     private String logfile;
 
-    public LogManager(){
-        this("unnamed.log");
-    }
+    private LogManager(){}
 
+    /**
+     * Creates a log file with given name.
+     * @param fileName Name of the log file to be created
+     */
     public LogManager(String fileName){
         logfile = fileName;
         String line = (new File(logfile)).exists() ? "------------------------------------------------" : "TYPE\tMESSAGE";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logfile, true));){
             writer.write(line+"\n");
-            writeLogMessage("APPLICATION STARTED", INFO_LOG);
+            writer.write("INFO\tAPPLICATION STARTED\n");
         }catch(IOException e){
             DialogManager.informException("Log file couldn't open.\nNo logs will be recorded.", null);
         }
     }
 
+    /**
+     * Writes a log message with given type.
+     * @param message Message to be writed on logfile
+     * @param type Type of the message
+     * @return <code>true</code> if operation is successful, <code>false</code> otherwise
+     */
     public boolean writeLogMessage(String message, int type){
         if(type<0 || type >= logTypes.length){
             type = 0;
@@ -42,11 +50,11 @@ public class LogManager{
         }
     }
 
-    public void logException(Exception e){
+    /**
+     * Writes the message of an exception to the logfile
+     * @param e Exception to be logged
+     */
+    public void writeExceptionLog(Exception e){
         writeLogMessage(e.getMessage(), ERROR_LOG);
-        writeLogMessage(e.getStackTrace().toString(), ERROR_LOG);
     }
-
-    
-
 }

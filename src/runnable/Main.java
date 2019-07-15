@@ -3,19 +3,17 @@ package runnable;
 import java.lang.System;
 import java.util.Random;
 import java.util.ArrayList;
-import java.io.*;
 import java.lang.Math;
 
-import visualization.Vehicle;
-import visualization.Car;
-import visualization.Bus;
-import visualization.Board;
+import visualization.*;
+import utilities.*;
 
 public class Main {
 
 	private static Board board;
 	private static Random randGen = new Random(System.currentTimeMillis());
-	private static SQLiteManager dbManager = new SQLiteManager("Highscores.db");
+	private static LogManager logger = new LogManager("sprinter.log");
+	private static SQLiteManager dbManager = new SQLiteManager("sprinter.db", logger);
 	private static int round = 1;
 	private static int score = 0;
 	private static String player = "";
@@ -62,9 +60,8 @@ public class Main {
 		if(board.gameOver()){
 			startGame();
 		}
-
 	}
-	
+
 
 	/**
 	 * Create new vehicle checking the already created vehicles.

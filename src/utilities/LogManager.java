@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class LogManager{
 
@@ -23,13 +25,19 @@ public class LogManager{
      */
     public LogManager(String fileName){
         logfile = fileName;
-        String line = (new File(logfile)).exists() ? "------------------------------------------------" : "TYPE\tMESSAGE";
+        String line = (new File(logfile)).exists() ? "------------------------------------------------" : "DateTime\tType\tMessage";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logfile, true));){
             writer.write(line+"\n");
-            writer.write("INFO\tAPPLICATION STARTED\n");
+            writer.write(getCurrentDateTime()+"\tINFO\tAPPLICATION STARTED\n");
         }catch(IOException e){
             DialogManager.informException("Log file couldn't open.\nNo logs will be recorded.", null);
         }
+    }
+
+    private String getCurrentDateTime(){
+        Date d = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(d);
     }
 
     /**
@@ -43,7 +51,7 @@ public class LogManager{
             type = 0;
         }
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logfile, true));){
-            writer.write(logTypes[type]+"\t"+message+"\n");
+            writer.write(getCurrentDateTime() + "\t" + logTypes[type]+"\t"+message+"\n");
             return true;
         }catch(IOException e){
             return false;

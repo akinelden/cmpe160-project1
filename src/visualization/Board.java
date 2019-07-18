@@ -28,6 +28,7 @@ public class Board implements BoardIntf {
 	private KeyListener keyListen;
 	private JButton startButton, exitButton;
 	private String name = "";
+
 	enum Keys {
 		K_UP,K_DOWN,K_RIGHT,K_LEFT,K_W,K_S,K_A,K_D,K_P,
 		MAX // be sure that MAX always the last one

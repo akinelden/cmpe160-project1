@@ -4,21 +4,38 @@ import java.lang.System;
 import java.util.Random;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.logging.*;
 
 import visualization.*;
 import utilities.*;
 
 public class Main {
 
+	static {
+		String path = Main.class.getClassLoader().getResource("resources/logging.properties").getFile();
+		System.setProperty("java.util.logging.config.file", path);
+		logger = Logger.getLogger(Main.class.getName());
+
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler(){
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				logger.log(Level.SEVERE, "An unexpected exception occurred:", e);
+				DialogManager.showMessage("An unexpected exception occurred.\nSystem exiting.", DialogManager.ERROR_MSG, null);
+				System.exit(1);
+			}
+		});
+	}
+
 	private static Board board;
 	private static Random randGen = new Random(System.currentTimeMillis());
-	private static LogManager logger = new LogManager("sprinter.log");
-	private static SQLiteManager dbManager = new SQLiteManager("sprinter.db", logger);
+	private static Logger logger;
+	private static SQLiteManager dbManager = new SQLiteManager("sprinter.db");
 	private static int round = 1;
 	private static int score = 0;
 	private static String player = "";
 
 	public static void main(String[] args) {
+		logger.info("A P P L I C A T I O N   S T A R T E D   ");
 		int screenWidth = 1280;
 		int screenHeight = 720;
 		int margin = 75;

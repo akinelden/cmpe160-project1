@@ -2,6 +2,7 @@ package utilities;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.*;
 
 public class SQLiteManager{
     private static final String JDBC_DRIVER = "org.sqlite.JDBC";  
@@ -13,26 +14,26 @@ public class SQLiteManager{
     private static final String resetTableWarn = "An error occurred while reading the highscores!\n"+
                                                     "Do you want to delete existing records (if any) and reset the data.\n"+
                                                     "Otherwise new scores won't be saved!";
+    private static final String logLabel = "DB_ERROR";                                                
     private boolean isConnected = true;
     private Connection con;
-
-    private LogManager logger;
+    private Logger logger;
 
     private SQLiteManager(){}
 
-    public SQLiteManager(String db, LogManager lm){
+    public SQLiteManager(String db){
         dbName = db;
         dbURL = DB_URL_PREFIX+dbName;
-        logger = lm;
+        logger = Logger.getLogger(SQLiteManager.class.getName());
         try{
             Class.forName(JDBC_DRIVER);
             con = DriverManager.getConnection(dbURL);
         }catch(SQLException e1){
-            logger.writeExceptionLog(e1);
+            logger.log(Level.SEVERE, logLabel, e1);
             DialogManager.informException(noConnectionWarn, null);
             isConnected = false;
         }catch(Exception e2){
-            logger.writeExceptionLog(e2);
+            logger.log(Level.SEVERE, logLabel, e2);
             DialogManager.informException("Some files are missing.\nNew scores won't be saved.", null);
             isConnected = false;
         }
@@ -50,7 +51,7 @@ public class SQLiteManager{
                 return false;
             }
         }catch(SQLException e){
-            logger.writeExceptionLog(e);
+            logger.log(Level.SEVERE, logLabel, e);
             return false;
         }
     }
@@ -60,7 +61,7 @@ public class SQLiteManager{
             try(Statement stmt = con.createStatement();){
                 stmt.executeUpdate("DROP TABLE "+tableName);
             }catch(SQLException e){
-                logger.writeExceptionLog(e);
+            logger.log(Level.SEVERE, logLabel, e);
             }
         }
         try(Statement stmt = con.createStatement()){
@@ -70,7 +71,7 @@ public class SQLiteManager{
                         "Score INTEGER NOT NULL)");
             stmt.executeUpdate("CREATE INDEX score_index ON "+tableName+" (Score)");
         }catch(SQLException e){
-            logger.writeExceptionLog(e);
+            logger.log(Level.SEVERE, logLabel, e);
             DialogManager.informException(noConnectionWarn, null);
             isConnected = false;
         }
@@ -93,7 +94,7 @@ public class SQLiteManager{
         }catch(SQLException e){
             boolean tableExists = checkTableExistence();
             if(tableExists){
-                logger.writeExceptionLog(e);
+            logger.log(Level.SEVERE, logLabel, e);
                 if(DialogManager.askForAction(resetTableWarn, null)){
                     resetTable(tableExists);
                 }
@@ -119,7 +120,7 @@ public class SQLiteManager{
         }catch(SQLException e){
             boolean tableExists = checkTableExistence();
             if(tableExists){
-                logger.writeExceptionLog(e);
+            logger.log(Level.SEVERE, logLabel, e);
                 if(DialogManager.askForAction(resetTableWarn, null)){
                     resetTable(tableExists);
                     if(writeNewScore(playerName, score)){

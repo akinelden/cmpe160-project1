@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class LogManager{
+public class MyLogger{
 
     public static final int INFO_LOG = 0;
     public static final int WARN_LOG = 1;
@@ -17,13 +17,13 @@ public class LogManager{
     
     private String logfile;
 
-    private LogManager(){}
+    private MyLogger(){}
 
     /**
      * Creates a log file with given name.
      * @param fileName Name of the log file to be created
      */
-    public LogManager(String fileName){
+    public MyLogger(String fileName){
         logfile = fileName;
         String line = (new File(logfile)).exists() ? "------------------------------------------------" : "DateTime\tType\tMessage";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(logfile, true));){

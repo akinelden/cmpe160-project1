@@ -28,6 +28,7 @@ public class Board implements BoardIntf {
 	private KeyListener keyListen;
 	private JButton startButton, exitButton;
 	private String name = "";
+
 	enum Keys {
 		K_UP,K_DOWN,K_RIGHT,K_LEFT,K_W,K_S,K_A,K_D,K_P,
 		MAX // be sure that MAX always the last one
@@ -337,12 +338,12 @@ public class Board implements BoardIntf {
 		return true;
 	}
 
-	public void updateHighScores(Vector<Vector<String>> hS){
-		if(hS.size() == 2){
-			for(int i=0; i<hS.get(0).size(); i++){
-				highScore1.get(i+1).setLabel(hS.get(0).get(i));
-				highScore2.get(i+1).setLabel(hS.get(1).get(i));
-			}
+	public void updateHighScores(ArrayList<String[]> hS){
+		int i=0;
+		for(String[] s : hS){
+			highScore1.get(i+1).setLabel(s[0]);
+			highScore2.get(i+1).setLabel(s[1]);
+			i++;
 		}
 	}
 

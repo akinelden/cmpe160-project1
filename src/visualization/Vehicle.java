@@ -75,17 +75,20 @@ public abstract class Vehicle extends GCompound {
 		return lane;
 	}
 
-	public boolean checkCollisionByParts(GRectangle rect){
+	public boolean checkCollisionByParts(GRectangle turtleRect){
 		GRectangle gR = body.getBounds();
 		gR.setLocation(this.getLocation());
-		if(gR.intersects(rect)){
+		if(gR.intersects(turtleRect)){
 			return true;
 		}
 		for(GOval w : wheels){
-			gR = w.getBounds();
-			gR.setLocation(gR.getX()+this.getX(),gR.getY()+this.getY());
-			if(gR.intersects(rect)){
-				return true;
+			double centerX = this.getX()+w.getX()+w.getWidth()/2;
+			double centerY = this.getY()+w.getY()+w.getHeight()/2;
+			double turtleCenterX = turtleRect.getX()+turtleRect.getWidth()/2;
+			double turtleCenterY = turtleRect.getY()+turtleRect.getHeight()/2;
+			double dist = Math.sqrt(Math.pow((centerX-turtleCenterX),2)+Math.pow((centerY-turtleCenterY),2));
+			if(2*dist<w.getWidth()+turtleRect.getWidth()){
+					return true;
 			}
 		}
 		return false;
